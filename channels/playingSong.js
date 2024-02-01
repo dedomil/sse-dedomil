@@ -3,11 +3,11 @@ const fetchRecentTrack = require("../helpers/lastFm");
 
 const playingSong = createChannel();
 
-let lastTrack = { name: "" };
+let lastTrack = { name: "Not playing anything" };
 
 setInterval(async () => {
     let track = await fetchRecentTrack();
-    if (lastTrack.name != track.name) {
+    if (track.success && lastTrack.name != track.name) {
         playingSong.broadcast(track, "trackChanged");
         lastTrack = track;
     }
