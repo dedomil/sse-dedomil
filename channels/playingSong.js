@@ -3,18 +3,29 @@ const fetchRecentTrack = require("../helpers/lastFm");
 
 const playingSong = createChannel();
 
-let lastTrack = { name: "Not playing anything" };
+let lastTrack = ["not playing anything", null, null];
 
 setInterval(async () => {
-    let track = await fetchRecentTrack();
-    if (track.success && lastTrack.name != track.name) {
-        playingSong.broadcast(track, "trackChanged");
-        lastTrack = track;
-    }
+  let track = await fetchRecentTrack();
+  if (track.length && lastTrack[0] != track[0]) {
+    playingSong.broadcast(track, "track-changed");
+    lastTrack = track;
+  }
 }, 5000);
 
+/** new session joined the channel
+ *  1) send `connected` event to the session who registered with current count and track
+ *  2) broadcast channel's sesssion count to other session except this one
+ */
+
 playingSong.on("session-registered", (session) => {
-    session.push(lastTrack, "userJoined");
+  session.push([lastTrack, playingSong.sessionCount], "connected");
+
+  playingSong.broadcast([playingSong.sessionCount], "user-joined", {
+    filter: (broadcastSession) => {
+      return broadcastSession != session; // comparing Session works!
+    },
+  });
 });
 
 module.exports = playingSong;
