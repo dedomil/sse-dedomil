@@ -21,9 +21,17 @@ setInterval(async () => {
 playingSong.on("session-registered", (session) => {
   session.push([lastTrack, playingSong.sessionCount], "connected");
 
-  playingSong.broadcast([playingSong.sessionCount], "user-joined", {
+  playingSong.broadcast([playingSong.sessionCount], "count-updated", {
     filter: (broadcastSession) => {
       return broadcastSession != session; // comparing Session works!
+    },
+  });
+});
+
+playingSong.on("session-deregistered", (session) => {
+  playingSong.broadcast([playingSong.sessionCount], "count-updated", {
+    filter: (broadcastSession) => {
+      return broadcastSession != session;
     },
   });
 });
