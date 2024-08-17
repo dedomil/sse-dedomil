@@ -18,6 +18,11 @@ app.get("/", async (req, res) => {
   });
 });
 
+app.get("/ping", (req, res) => {
+  playingSongChannel.broadcast([], "ping");
+  res.send();
+});
+
 app.listen(PORT, () => {
   console.log(`started server on ${PORT}`);
 });
