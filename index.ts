@@ -8,19 +8,19 @@ const app = new Hono();
 
 app.use(cors());
 
-// background worker, maybe use bun workers in future
+// background worker, maybe use some kind of worker
 async function createPolling() {
   setInterval(async () => {
     if (playingSongChannel.sessionCount === 0) return; // dont poll api if no one is listening
 
     const oldTrack = playingSongChannel.state.recentTrack;
-    const newTrack = await getRecentTracks("adbtya");
+    const newTrack = await getRecentTracks(process.env.LASTFM_USERNAME);
 
     if (oldTrack.name != newTrack.name) {
       playingSongChannel.broadcast(newTrack, "update");
       playingSongChannel.state.recentTrack = newTrack;
     }
-  }, 5000);
+  }, parseInt(process.env.POLLING_INTERVAL));
 }
 
 app.get("/", async (c) => {

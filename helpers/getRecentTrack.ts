@@ -1,7 +1,7 @@
 import { LastFMUser } from "lastfm-ts-api";
 import { RecentTrack } from "../types";
 
-const user = new LastFMUser(process.env.LASTFM_API_KEY!);
+const user = new LastFMUser(process.env.LASTFM_API_KEY);
 
 const getRecentTracks = async (username: string): Promise<RecentTrack> => {
   const lastTrack = await user.getRecentTracks({ user: username, limit: 1 });

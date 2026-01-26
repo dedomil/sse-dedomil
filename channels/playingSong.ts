@@ -6,7 +6,7 @@ const playingSongChannel = createChannel<{ recentTrack: RecentTrack }>({
   state: {
     recentTrack: {
       name: "404 - not playing",
-      artist: "aditya yadav",
+      artist: "no artist",
       image: "https://i.ibb.co/4nrzCNQN/1499-solid-color.jpg",
       isPlaying: false,
     },
